@@ -7,10 +7,10 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import LinkIcon from "@mui/icons-material/Link";
-import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
+
 import CheckIcon from "@mui/icons-material/Check";
 import React from "react";
+import RequestCard from "./RequestCard";
 export default function Homepage() {
   return (
     <Container maxWidth="xl" disableGutters={true}>
@@ -29,64 +29,7 @@ export default function Homepage() {
         </Typography>
       </Box>
       <Box sx={{ display: "flex", gap: "3rem" }}>
-        <Card sx={{ marginLeft: "1.25rem", width: "400px" }}>
-          <CardContent>
-            <Typography
-              sx={{
-                fontSize: "1rem",
-                display: "flex",
-                alignItems: "center",
-                gap: ".25rem",
-              }}
-            >
-              {
-                <LinkIcon
-                  sx={{ fontSize: "1.5rem", transform: "rotate(135deg)" }}
-                />
-              }{" "}
-              Enter a long URL to make a TinyURL
-            </Typography>
-            <TextField
-              sx={{ marginTop: "1rem" }}
-              variant="outlined"
-              size="small"
-              fullWidth
-              name="redirect_url"
-            />
-            <Typography
-              sx={{
-                fontSize: "1rem",
-                display: "flex",
-                alignItems: "center",
-                gap: ".25rem",
-                marginTop: "1rem",
-              }}
-            >
-              {
-                <AutoFixHighIcon
-                  sx={{ fontSize: "1.5rem", transform: "rotate(353deg)" }}
-                />
-              }
-              Customize your link
-            </Typography>
-            <TextField
-              sx={{ marginTop: "1rem" }}
-              variant="outlined"
-              size="small"
-              fullWidth
-              name="curtom_url"
-            />
-            <Button
-              color="success"
-              variant="contained"
-              size="large"
-              fullWidth
-              sx={{ margin: "1rem 0", textTransform: "none" }}
-            >
-              Make tinyURL!
-            </Button>
-          </CardContent>
-        </Card>
+        <RequestCard />
         <Box sx={{ color: "white" }}>
           <Typography variant="h6">Welcome to</Typography>
           <Typography sx={{ fontFamily: "Bungee,cursive" }} variant="h3">
