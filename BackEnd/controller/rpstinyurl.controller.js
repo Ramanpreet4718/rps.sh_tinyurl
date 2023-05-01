@@ -3,29 +3,30 @@ const { nanoid } = require("nanoid");
 
 async function generateURL(req, res) {
   try {
-    const { shortId = "", redirectId } = req.body;
+    const { tinyUrl = "", redirectUrl } = req.body.data;
+    console.log(req.body.data);
 
-    if (redirectId == undefined) {
+    if (redirectUrl == "") {
       res.status(400).send({ error: "url is required" });
     }
 
-    if (shortId == "") {
-      const newShortId = nanoid(7);
+    if (tinyUrl == "") {
+      const newtinyUrl = nanoid(7);
       const id = await shortURL.create({
-        shortId: newShortId,
-        redirectId: redirectId,
+        tinyUrl: newtinyUrl,
+        redirectUrl: redirectUrl,
         visitHistory: [],
       });
 
       res.send(id);
     } else {
-      const id = await shortURL.findOne({ shortId });
+      const id = await shortURL.findOne({ tinyUrl });
       if (id) {
         res.status(409).send({ error: "short url already exist" });
       } else {
         const id = await shortURL.create({
-          shortId: shortId,
-          redirectId: redirectId,
+          tinyUrl: tinyUrl,
+          redirectUrl: redirectUrl,
           visitHistory: [],
         });
 
@@ -33,22 +34,23 @@ async function generateURL(req, res) {
       }
     }
   } catch (error) {
+    console.log(error);
     res.status(500).send({ error: "Something went wrong" });
   }
 }
 
 async function getUrl(req, res) {
-  const shortId = req.params.shorturl;
+  const tinyUrl = req.params.shorturl;
 
-  const id = await shortURL.findOne({ shortId });
+  const id = await shortURL.findOne({ tinyUrl });
 
   if (id) {
     const entry = await shortURL.findOneAndUpdate(
-      { shortId },
+      { tinyUrl },
       { $push: { visitHistory: new Date() } }
     );
 
-    res.redirect(entry.redirectId);
+    res.send(entry.redirectUrl);
   } else {
     res.status(404).send({ error: "url not found" });
   }

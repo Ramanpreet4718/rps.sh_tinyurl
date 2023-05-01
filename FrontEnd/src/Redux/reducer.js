@@ -10,7 +10,7 @@ import {
 const initialState = {
   isSuccess: false,
   isError: false,
-  isLoading: false,
+  isLoading: true,
   tinyUrl: "",
   redirectUrl: "",
 };
@@ -23,6 +23,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         isLoading: false,
+        isSuccess: true,
         tinyUrl: action.payload.tinyUrl,
         redirectUrl: action.payload.redirectUrl,
       };
@@ -30,14 +31,12 @@ export default function reducer(state = initialState, action) {
       return { ...state, isLoading: false, isError: true };
 
     case TINYURL_REQUEST:
-      return { ...state, isLoading: false };
+      return { ...state, isLoading: true };
 
     case TINYURL_SUCCESS:
       return {
         ...state,
         isLoading: false,
-        tinyUrl: action.payload.tinyUrl,
-        redirectUrl: action.payload.redirectUrl,
       };
 
     case TINYURL_FAILED:

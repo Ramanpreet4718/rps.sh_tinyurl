@@ -7,21 +7,12 @@ import {
 } from "@mui/material";
 import LinkIcon from "@mui/icons-material/Link";
 import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { handleURLGeneration } from "../../Redux/action";
+import React from "react";
+import { useSelector } from "react-redux";
 
-export default function RequestCard() {
-  let [urlObj, setUrlObj] = useState({ tinyUrl: "", redirectUrl: "" });
-  let dispatch = useDispatch();
-
-  const inputFunction = (e) => {
-    setUrlObj({ ...urlObj, [e.target.name]: e.target.value });
-  };
-
-  const submitFunciont = () => {
-    let response = dispatch(handleURLGeneration(urlObj));
-  };
+export default function DisplayCard() {
+  let tinyURL = useSelector((state) => state.tinyUrl);
+  let redirectUrl = useSelector((state) => state.redirectUrl);
 
   return (
     <Card sx={{ marginLeft: "1.25rem", width: "400px", borderRadius: "10px" }}>
@@ -39,15 +30,18 @@ export default function RequestCard() {
               sx={{ fontSize: "1.5rem", transform: "rotate(135deg)" }}
             />
           }{" "}
-          Enter a long URL to make a TinyURL
+          URL
         </Typography>
         <TextField
           sx={{ marginTop: "1rem" }}
           variant="outlined"
           size="small"
           fullWidth
-          name="redirectUrl"
-          onChange={inputFunction}
+          defaultValue={redirectUrl}
+          name="redirect_url"
+          InputProps={{
+            readOnly: true,
+          }}
         />
         <Typography
           sx={{
@@ -63,26 +57,27 @@ export default function RequestCard() {
               sx={{ fontSize: "1.5rem", transform: "rotate(353deg)" }}
             />
           }
-          Customize your link
+          Tiny URL
         </Typography>
         <TextField
           sx={{ marginTop: "1rem" }}
           variant="outlined"
           size="small"
           fullWidth
-          name="tinyUrl"
-          onChange={inputFunction}
-          inputProps={{ maxLength: 7 }}
+          name="tiny_url"
+          defaultValue={tinyURL}
+          InputProps={{
+            readOnly: true,
+          }}
         />
         <Button
           color="success"
           variant="contained"
           size="large"
           fullWidth
-          onClick={submitFunciont}
           sx={{ margin: "1rem 0", textTransform: "none" }}
         >
-          Make tinyURL!
+          Make New tinyURL!
         </Button>
       </CardContent>
     </Card>

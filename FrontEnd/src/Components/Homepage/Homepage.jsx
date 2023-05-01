@@ -3,6 +3,7 @@ import {
   Button,
   Card,
   CardContent,
+  CircularProgress,
   Container,
   TextField,
   Typography,
@@ -11,7 +12,11 @@ import {
 import CheckIcon from "@mui/icons-material/Check";
 import React from "react";
 import RequestCard from "./RequestCard";
+import DisplayCard from "./DisplayCard";
+import { useSelector } from "react-redux";
 export default function Homepage() {
+  let isSuccess = useSelector((state) => state.isSuccess);
+
   return (
     <Container maxWidth="xl" disableGutters={true}>
       <Box>
@@ -29,7 +34,7 @@ export default function Homepage() {
         </Typography>
       </Box>
       <Box sx={{ display: "flex", gap: "3rem" }}>
-        <RequestCard />
+        {isSuccess ? <DisplayCard /> : <RequestCard />}
         <Box sx={{ color: "white" }}>
           <Typography variant="h6">Welcome to</Typography>
           <Typography sx={{ fontFamily: "Bungee,cursive" }} variant="h3">

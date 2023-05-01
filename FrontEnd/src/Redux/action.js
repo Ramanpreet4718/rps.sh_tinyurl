@@ -33,10 +33,9 @@ function tinyurl_request() {
   };
 }
 
-function tinyurl_success(payload) {
+function tinyurl_success() {
   return {
     type: TINYURL_SUCCESS,
-    payload: payload,
   };
 }
 
@@ -47,36 +46,39 @@ function tinyurl_failed() {
 }
 
 function handleURLGeneration(urlData) {
+  console.log(urlData);
   return async (dispatch, getState) => {
     try {
       dispatch(url_generation_request());
       const url = "http://localhost:3000/newrequest";
       const obj = {
-        method: "POST",
-        body: JSON.stringify(urlData),
+        method: "post",
         headers: {
-          "Content-type": "application/json; charset=UTF-8",
+          Accept: "application.json",
+          "Content-Type": "application/json",
         },
+        data: urlData,
       };
 
-      let fetchData = axios.post(url, obj);
-      console.log(fetchData);
-      dispatch(url_generation_success(fetchData));
+      let fetchData = await axios.post(url, obj);
+      console.log(fetchData.data);
+      dispatch(url_generation_success(fetchData.data));
     } catch (error) {
       await dispatch(url_generation_failed());
     }
   };
 }
 
-function handleTinyURLGeneration(urlData) {
+function handleTinyURLRedirect(urlData) {
   return async (dispatch, getState) => {
     try {
       dispatch(tinyurl_request());
       const url = `http://localhost:3000/${urlData}`;
 
-      let fetchData = axios.post(url);
-      console.log(fetchData);
-      dispatch(tinyurl_success(fetchData));
+      let fetchData = await axios.get(url);
+
+      dispatch(tinyurl_success());
+      window.location.replace(fetchData.data);
     } catch (error) {
       await dispatch(tinyurl_failed());
     }
@@ -91,5 +93,5 @@ export {
   tinyurl_success,
   tinyurl_failed,
   handleURLGeneration,
-  handleTinyURLGeneration,
+  handleTinyURLRedirect,
 };
