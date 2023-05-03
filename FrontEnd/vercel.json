@@ -1,0 +1,6 @@
+{
+  "routes": [
+    { "src": "/", "dest": "/", "status": 200 },
+    { "src": "/:shortUrl", "dest": "/:shortUrl", "status": 200 }
+  ]
+}
