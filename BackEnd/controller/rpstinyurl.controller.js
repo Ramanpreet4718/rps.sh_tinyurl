@@ -3,6 +3,7 @@ const { nanoid } = require("nanoid");
 
 async function generateURL(req, res) {
   try {
+    console.log(req.body);
     const { tinyUrl = "", redirectUrl } = req.body.data;
     console.log(req.body.data);
 
