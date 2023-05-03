@@ -8,11 +8,13 @@ import {
 import LinkIcon from "@mui/icons-material/Link";
 import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import React from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { new_request } from "../../Redux/action";
 
 export default function DisplayCard() {
   let tinyURL = useSelector((state) => state.tinyUrl);
   let redirectUrl = useSelector((state) => state.redirectUrl);
+  let dispatch = useDispatch();
 
   return (
     <Card sx={{ marginLeft: "1.25rem", width: "400px", borderRadius: "10px" }}>
@@ -76,6 +78,9 @@ export default function DisplayCard() {
           size="large"
           fullWidth
           sx={{ margin: "1rem 0", textTransform: "none" }}
+          onClick={() => {
+            dispatch(new_request());
+          }}
         >
           Make New tinyURL!
         </Button>

@@ -5,6 +5,7 @@ import {
   TINYURL_REQUEST,
   TINYURL_SUCCESS,
   TINYURL_FAILED,
+  NEW_REQUEST,
 } from "./actionType";
 import axios from "axios";
 
@@ -45,12 +46,18 @@ function tinyurl_failed() {
   };
 }
 
+function new_request() {
+  return {
+    type: NEW_REQUEST,
+  };
+}
+
 function handleURLGeneration(urlData) {
   console.log(urlData);
   return async (dispatch, getState) => {
     try {
       dispatch(url_generation_request());
-      const url = "http://localhost:3000/newrequest";
+      const url = "https://rps-sh-tinyurl-backend.vercel.app/newrequest";
       const obj = {
         method: "post",
         headers: {
@@ -73,7 +80,7 @@ function handleTinyURLRedirect(urlData) {
   return async (dispatch, getState) => {
     try {
       dispatch(tinyurl_request());
-      const url = `http://localhost:3000/${urlData}`;
+      const url = `https://rps-sh-tinyurl-backend.vercel.app/${urlData}`;
 
       let fetchData = await axios.get(url);
 
@@ -92,6 +99,7 @@ export {
   tinyurl_request,
   tinyurl_success,
   tinyurl_failed,
+  new_request,
   handleURLGeneration,
   handleTinyURLRedirect,
 };

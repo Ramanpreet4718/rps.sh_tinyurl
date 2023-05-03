@@ -5,6 +5,7 @@ import {
   TINYURL_REQUEST,
   TINYURL_SUCCESS,
   TINYURL_FAILED,
+  NEW_REQUEST,
 } from "./actionType";
 
 const initialState = {
@@ -41,6 +42,12 @@ export default function reducer(state = initialState, action) {
 
     case TINYURL_FAILED:
       return { ...state, isLoading: false, isError: true };
+
+    case NEW_REQUEST:
+      return {
+        ...state,
+        ...initialState,
+      };
 
     default:
       return state;

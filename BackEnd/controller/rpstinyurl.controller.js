@@ -5,7 +5,6 @@ async function generateURL(req, res) {
   try {
     console.log(req.body);
     const { tinyUrl = "", redirectUrl } = req.body.data;
-    console.log(req.body.data);
 
     if (redirectUrl == "") {
       res.status(400).send({ error: "url is required" });
