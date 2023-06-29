@@ -6,14 +6,18 @@ import {
   TINYURL_SUCCESS,
   TINYURL_FAILED,
   NEW_REQUEST,
+  TOGGLE_DRAWER
 } from "./actionType";
 
 const initialState = {
+  isAuth:false,
   isSuccess: false,
   isError: false,
-  isLoading: true,
+  isLoading: false,
   tinyUrl: "",
   redirectUrl: "",
+  openDrawer:false,
+  drawerType:"",
 };
 
 export default function reducer(state = initialState, action) {
@@ -48,6 +52,13 @@ export default function reducer(state = initialState, action) {
         ...state,
         ...initialState,
       };
+    
+    case TOGGLE_DRAWER:
+      return {
+        ...state,
+        openDrawer:action.open,
+        drawerType:action.page
+      };  
 
     default:
       return state;

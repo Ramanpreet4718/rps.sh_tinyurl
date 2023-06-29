@@ -14,24 +14,14 @@ import React from "react";
 import RequestCard from "./RequestCard";
 import DisplayCard from "./DisplayCard";
 import { useSelector } from "react-redux";
+import NavBar from "../NavBar/NavBar";
 export default function Homepage() {
   let isSuccess = useSelector((state) => state.isSuccess);
 
   return (
     <Container maxWidth="xl" disableGutters={true}>
       <Box>
-        <Typography
-          sx={{
-            fontFamily: "Bungee,cursive",
-            fontSize: "2.25rem",
-            lineHeight: "2.5rem",
-            color: "white",
-            margin: "1rem",
-          }}
-          variant="h4"
-        >
-          RPS.SH
-        </Typography>
+        <NavBar />
       </Box>
       <Box sx={{ display: "flex", gap: "3rem" }}>
         {isSuccess ? <DisplayCard /> : <RequestCard />}

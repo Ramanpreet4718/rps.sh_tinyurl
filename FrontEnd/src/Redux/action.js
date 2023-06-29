@@ -1,3 +1,4 @@
+import constant from "../utils/constants";
 import {
   URL_GENERATION_REQUEST,
   URL_GENERATION_SUCCESS,
@@ -6,6 +7,7 @@ import {
   TINYURL_SUCCESS,
   TINYURL_FAILED,
   NEW_REQUEST,
+  TOGGLE_DRAWER,
 } from "./actionType";
 import axios from "axios";
 
@@ -52,12 +54,21 @@ function new_request() {
   };
 }
 
+function toggle_drawer(open,page="") {
+  return {
+    type: TOGGLE_DRAWER,
+    open:open,
+    page:page,
+  };
+}
+
 function handleURLGeneration(urlData) {
   console.log(urlData);
   return async (dispatch, getState) => {
+    console.log(dispatch);
     try {
       dispatch(url_generation_request());
-      const url = "https://rps-sh-tinyurl-backend.vercel.app/newrequest";
+      const url = `${constant.BACKEND_URL_LOCAL}/newrequest`;
       const obj = {
         method: "post",
         headers: {
@@ -68,7 +79,6 @@ function handleURLGeneration(urlData) {
       };
 
       let fetchData = await axios.post(url, obj);
-      console.log(fetchData.data);
       dispatch(url_generation_success(fetchData.data));
     } catch (error) {
       await dispatch(url_generation_failed());
@@ -80,7 +90,7 @@ function handleTinyURLRedirect(urlData) {
   return async (dispatch, getState) => {
     try {
       dispatch(tinyurl_request());
-      const url = `https://rps-sh-tinyurl-backend.vercel.app/${urlData}`;
+      const url = constant.BACKEND_URL_LOCAL+"/"+urlData;
 
       let fetchData = await axios.get(url);
 
@@ -92,6 +102,12 @@ function handleTinyURLRedirect(urlData) {
   };
 }
 
+function toggleDrawer(open,page){
+  return (dispatch) => {
+      dispatch(toggle_drawer(open,page));
+  };
+} 
+
 export {
   url_generation_request,
   url_generation_success,
@@ -102,4 +118,6 @@ export {
   new_request,
   handleURLGeneration,
   handleTinyURLRedirect,
+  toggleDrawer,
+  toggle_drawer
 };
