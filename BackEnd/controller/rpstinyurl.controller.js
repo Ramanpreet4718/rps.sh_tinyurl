@@ -7,7 +7,7 @@ async function generateURL(req, res) {
     const { tinyUrl = "", redirectUrl } = req.body.data;
 
     if (redirectUrl == "") {
-      res.status(400).send({ error: "url is required" });
+      res.status(400).send({statusCode:400, error: "url is required" });
     }
 
     if (tinyUrl == "") {
@@ -22,7 +22,7 @@ async function generateURL(req, res) {
     } else {
       const id = await shortURL.findOne({ tinyUrl });
       if (id) {
-        res.status(409).send({ error: "short url already exist" });
+        res.status(409).send({ statusCode:409, error: "short url already exist" });
       } else {
         const id = await shortURL.create({
           tinyUrl: tinyUrl,
@@ -35,7 +35,7 @@ async function generateURL(req, res) {
     }
   } catch (error) {
     console.log(error);
-    res.status(500).send({ error: "Something went wrong" });
+    res.status(500).send({statusCode:500, error: "Something went wrong" });
   }
 }
 
@@ -52,7 +52,7 @@ async function getUrl(req, res) {
 
     res.send(entry.redirectUrl);
   } else {
-    res.status(404).send({ error: "url not found" });
+    res.status(404).send({statusCode:404, error: "url not found" });
   }
 }
 

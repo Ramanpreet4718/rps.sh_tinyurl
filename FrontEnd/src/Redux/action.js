@@ -1,4 +1,6 @@
-import constant from "../utils/constants";
+import {constant} from "../utils/constants";
+import { HTTPPost } from "../utils/utils";
+import { toast } from "react-toastify";
 import {
   URL_GENERATION_REQUEST,
   URL_GENERATION_SUCCESS,
@@ -8,6 +10,9 @@ import {
   TINYURL_FAILED,
   NEW_REQUEST,
   TOGGLE_DRAWER,
+  SIGNUP_REQUEST,
+  SIGNUP_SUCCESS,
+  SIGNUP_FAILED
 } from "./actionType";
 import axios from "axios";
 
@@ -62,25 +67,35 @@ function toggle_drawer(open,page="") {
   };
 }
 
+function signup_request() {
+  return {
+    type: SIGNUP_REQUEST,
+  };
+}
+
+function signup_success(payload) {
+  return {
+    type: SIGNUP_SUCCESS,
+    payload
+  };
+}
+
+function signup_failed(payload) {
+  return {
+    type: SIGNUP_FAILED,
+    payload
+  };
+}
+
 function handleURLGeneration(urlData) {
-  console.log(urlData);
   return async (dispatch, getState) => {
-    console.log(dispatch);
     try {
       dispatch(url_generation_request());
-      const url = `${constant.BACKEND_URL_LOCAL}/newrequest`;
-      const obj = {
-        method: "post",
-        headers: {
-          Accept: "application.json",
-          "Content-Type": "application/json",
-        },
-        data: urlData,
-      };
-
-      let fetchData = await axios.post(url, obj);
+      let fetchData = await HTTPPost(constant.NEW_REQUEST,urlData);
+      console.log(fetchData);
       dispatch(url_generation_success(fetchData.data));
     } catch (error) {
+      console.log(error);
       await dispatch(url_generation_failed());
     }
   };
@@ -90,12 +105,11 @@ function handleTinyURLRedirect(urlData) {
   return async (dispatch, getState) => {
     try {
       dispatch(tinyurl_request());
-      const url = constant.BACKEND_URL_LOCAL+"/"+urlData;
+      const url = constant.BACKEND_URL_LOCAL+urlData;
 
       let fetchData = await axios.get(url);
 
       dispatch(tinyurl_success());
-      window.location.replace(fetchData.data);
     } catch (error) {
       await dispatch(tinyurl_failed());
     }
@@ -108,6 +122,28 @@ function toggleDrawer(open,page){
   };
 } 
 
+function handleSignUp(userData){
+  return async (dispatch, getState) => {
+    try {
+      dispatch(signup_request());
+      let fetchData = await HTTPPost(constant.SIGNUP,userData);
+      console.log(fetchData);
+      if(fetchData.data.statusCode==200){
+        dispatch(signup_success(fetchData.data));
+      }
+
+        toast.success(fetchData.data.message);
+
+        
+
+    } catch (error) {
+      console.log(error.response.data);
+      await dispatch(signup_failed(error.response.data));
+      toast.error(error.response.data.message);
+    }
+  };
+}
+
 export {
   url_generation_request,
   url_generation_success,
@@ -119,5 +155,9 @@ export {
   handleURLGeneration,
   handleTinyURLRedirect,
   toggleDrawer,
-  toggle_drawer
+  toggle_drawer,
+  handleSignUp,
+  signup_request,
+  signup_success,
+  signup_failed,
 };

@@ -6,7 +6,10 @@ import {
   TINYURL_SUCCESS,
   TINYURL_FAILED,
   NEW_REQUEST,
-  TOGGLE_DRAWER
+  TOGGLE_DRAWER,
+  SIGNUP_REQUEST,
+  SIGNUP_SUCCESS,
+  SIGNUP_FAILED
 } from "./actionType";
 
 const initialState = {
@@ -14,10 +17,13 @@ const initialState = {
   isSuccess: false,
   isError: false,
   isLoading: false,
+  message:"",
   tinyUrl: "",
   redirectUrl: "",
   openDrawer:false,
   drawerType:"",
+  name:"",
+  user_id:"",
 };
 
 export default function reducer(state = initialState, action) {
@@ -58,7 +64,21 @@ export default function reducer(state = initialState, action) {
         ...state,
         openDrawer:action.open,
         drawerType:action.page
-      };  
+      };
+      
+    case SIGNUP_REQUEST:
+      return { ...state, isLoading: true };
+
+    case   SIGNUP_SUCCESS:
+      return {
+        ...state,
+        isLoading:false,
+        message:action.payload.message,
+        drawerType:"signIn",
+      };
+
+    case   SIGNUP_FAILED:
+      return { ...state, isLoading: false, isError: true, message:action.payload.message };
 
     default:
       return state;

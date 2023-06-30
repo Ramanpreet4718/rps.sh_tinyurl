@@ -4,11 +4,11 @@ import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleDrawer } from '../../Redux/action';
-import { Avatar, CircularProgress, Container, IconButton, InputAdornment, TextField, Typography } from '@mui/material';
-import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import { handleSignUp, toggleDrawer } from '../../Redux/action';
+import { CircularProgress, IconButton, InputAdornment, TextField, Typography } from '@mui/material';
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { isEmpty } from '../../utils/utils';
 
 export default function Sidebar() {
     const dispatch = useDispatch();
@@ -17,7 +17,7 @@ export default function Sidebar() {
     const handleDispatch = () => { dispatch(toggleDrawer(false)) };
 
     const [showPassword, setShowPassword] = useState(false);
-    const [userDetails, setUserDetails] = useState({ email: "", password: "" });
+    const [userDetails, setUserDetails] = useState({ name: "", email: "", password: "" });
     const [passwordError, setPasswordError] = useState({
         errorType: false,
         message: "",
@@ -31,11 +31,70 @@ export default function Sidebar() {
         message: "",
     });
     const handleClickShowPassword = () => { setShowPassword(!showPassword); }
-    const isLoading = useSelector((store) => {
-        return store.isLoading;
-    });
+    const isLoading = useSelector((store) => { return store.isLoading; });
 
-    const checkandSend = () => { console.log("Hello World"); }
+    const checkAndSend = () => {
+        let { name, email, password } = userDetails;
+
+        if (isEmpty(name)) {
+            setUserNameError({
+                ...userNameError,
+                errorType: true,
+                message: "UserName should not be empty",
+            });
+        } else {
+            setUserNameError({
+                ...userNameError,
+                errorType: false,
+                message: "",
+            });
+        }
+
+
+        if (password.length < 8) {
+            setPasswordError({
+                ...passwordError,
+                errorType: true,
+                message: "Password must be 8 characters long",
+            });
+        } else {
+            setPasswordError({
+                ...passwordError,
+                errorType: false,
+                message: "",
+            });
+        }
+
+        if (isEmpty(email)) {
+            setEmailError({
+                ...emailError,
+                errorType: true,
+                message: "Email should not be empty",
+            });
+        } else {
+            if (email.indexOf("@") <= -1) {
+                setEmailError({
+                    ...emailError,
+                    errorType: true,
+                    message: "Please enter a valid email",
+                });
+            }
+            else {
+                setEmailError({
+                    ...emailError,
+                    errorType: false,
+                    message: "",
+                });
+            }
+        }
+
+        if (passwordError.errorType == false && emailError.errorType == false && userNameError.errorType == false) {
+
+            if (drawerType === "signUp") {
+                dispatch(handleSignUp(userDetails));
+            }
+        }
+    }
 
     const list = (
         <Box
@@ -109,10 +168,10 @@ export default function Sidebar() {
                 >
                     {drawerType === "signUp" ? (<TextField
                         onChange={(e) => {
-                            setUserDetails({ ...userDetails, userName: e.target.value });
+                            setUserDetails({ ...userDetails, name: e.target.value });
                         }}
                         label="User Name"
-                        type="userName"
+                        type="text"
                         variant="outlined"
                         size="small"
                         fullWidth
@@ -154,25 +213,8 @@ export default function Sidebar() {
                         helperText={passwordError.message}
                     />
 
-                    <Button
-
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color='success'
-                        onClick={checkandSend}
-                    >
-                        {isLoading ? (
-                            <CircularProgress
-                                sx={{
-                                    color: "white",
-                                    height: "24px !important",
-                                    width: "24px !important",
-                                }}
-                            />
-                        ) : (
-                            drawerType === "signUp" ? "Create Account" : "LogIn"
-                        )}
+                    <Button type="submit" fullWidth variant="contained" color='success' onClick={checkAndSend}>
+                        {isLoading ? (<CircularProgress sx={{ color: "white", height: "24px !important", width: "24px !important", }} />) : (drawerType === "signUp" ? "Create Account" : "LogIn")}
                     </Button>
                 </Box>
             </Box>
