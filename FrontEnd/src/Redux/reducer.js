@@ -9,7 +9,10 @@ import {
   TOGGLE_DRAWER,
   SIGNUP_REQUEST,
   SIGNUP_SUCCESS,
-  SIGNUP_FAILED
+  SIGNUP_FAILED,
+  SIGNIN_REQUEST,
+  SIGNIN_SUCCESS,
+  SIGNIN_FAILED
 } from "./actionType";
 
 const initialState = {
@@ -22,8 +25,6 @@ const initialState = {
   redirectUrl: "",
   openDrawer:false,
   drawerType:"",
-  name:"",
-  user_id:"",
 };
 
 export default function reducer(state = initialState, action) {
@@ -78,6 +79,21 @@ export default function reducer(state = initialState, action) {
       };
 
     case   SIGNUP_FAILED:
+      return { ...state, isLoading: false, isError: true, message:action.payload.message };
+
+      case SIGNIN_REQUEST:
+      return { ...state, isLoading: true };
+
+    case   SIGNIN_SUCCESS:
+      return {
+        ...state,
+        isLoading:false,
+        message:action.payload.message,
+        drawerType:"",
+        openDrawer:false
+      };
+
+    case   SIGNIN_FAILED:
       return { ...state, isLoading: false, isError: true, message:action.payload.message };
 
     default:

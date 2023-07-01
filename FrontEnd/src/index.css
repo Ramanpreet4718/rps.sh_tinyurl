@@ -7,6 +7,10 @@ body {
   height: 100vh;
 }
 
+.Toastify__toast-theme--colored.Toastify__toast--success {
+  background-color: #2e7d32;
+}
+
 @keyframes gradient {
   0% {
     background-position: 0% 50%;

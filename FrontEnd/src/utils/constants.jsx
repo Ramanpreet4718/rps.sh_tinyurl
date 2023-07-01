@@ -4,7 +4,7 @@ let constant = {
     NEW_REQUEST: "newrequest",
     SIGNUP: "signup",
     SIGNIN: "signin",
-
+    LOGIN_TOKEN: "LOGIN_TOKEN",
 }
 
 

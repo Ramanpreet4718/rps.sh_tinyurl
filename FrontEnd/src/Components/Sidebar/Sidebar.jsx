@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { useDispatch, useSelector } from 'react-redux';
-import { handleSignUp, toggleDrawer } from '../../Redux/action';
+import { handleSignIn, handleSignUp, toggleDrawer } from '../../Redux/action';
 import { CircularProgress, IconButton, InputAdornment, TextField, Typography } from '@mui/material';
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -18,18 +18,9 @@ export default function Sidebar() {
 
     const [showPassword, setShowPassword] = useState(false);
     const [userDetails, setUserDetails] = useState({ name: "", email: "", password: "" });
-    const [passwordError, setPasswordError] = useState({
-        errorType: false,
-        message: "",
-    });
-    const [emailError, setEmailError] = useState({
-        errorType: false,
-        message: "",
-    });
-    const [userNameError, setUserNameError] = useState({
-        errorType: false,
-        message: "",
-    });
+    const [passwordError, setPasswordError] = useState({ errorType: false, message: "", });
+    const [emailError, setEmailError] = useState({ errorType: false, message: "", });
+    const [userNameError, setUserNameError] = useState({ errorType: false, message: "", });
     const handleClickShowPassword = () => { setShowPassword(!showPassword); }
     const isLoading = useSelector((store) => { return store.isLoading; });
 
@@ -44,12 +35,10 @@ export default function Sidebar() {
             });
         } else {
             setUserNameError({
-                ...userNameError,
                 errorType: false,
                 message: "",
             });
         }
-
 
         if (password.length < 8) {
             setPasswordError({
@@ -59,7 +48,6 @@ export default function Sidebar() {
             });
         } else {
             setPasswordError({
-                ...passwordError,
                 errorType: false,
                 message: "",
             });
@@ -81,20 +69,26 @@ export default function Sidebar() {
             }
             else {
                 setEmailError({
-                    ...emailError,
                     errorType: false,
                     message: "",
                 });
             }
         }
+    }
 
-        if (passwordError.errorType == false && emailError.errorType == false && userNameError.errorType == false) {
-
-            if (drawerType === "signUp") {
+    useEffect(() => {
+        if (drawerType === "signUp") {
+            if (passwordError.errorType == false && emailError.errorType == false && userNameError.errorType == false) {
                 dispatch(handleSignUp(userDetails));
             }
         }
-    }
+        if (drawerType === "signIn") {
+            console.log(passwordError.errorType, emailError.errorType);
+            if (passwordError.errorType === false && emailError.errorType === false) {
+                dispatch(handleSignIn(userDetails));
+            }
+        }
+    }, [passwordError, emailError, userNameError])
 
     const list = (
         <Box
@@ -212,6 +206,22 @@ export default function Sidebar() {
                         error={passwordError.errorType}
                         helperText={passwordError.message}
                     />
+
+                    <Box sx={{ width: "100%", textAlign: "right" }}>
+                        <Typography
+                            sx={{
+                                color: "#1d67fc",
+                                fontSize: ".9rem",
+                                cursor: "pointer",
+                                fontWeight: "700",
+                            }}
+                            align="right"
+                            variant="h6"
+                            onClick={() => { drawerType === "signUp" ? dispatch(toggleDrawer(true, "signIn")) : dispatch(toggleDrawer(true, "signUp")) }}
+                        >
+                            {drawerType === "signUp" ? "Already have an account? Click here to SignIn" : "Don't have an account? Click here to Register"}
+                        </Typography>
+                    </Box>
 
                     <Button type="submit" fullWidth variant="contained" color='success' onClick={checkAndSend}>
                         {isLoading ? (<CircularProgress sx={{ color: "white", height: "24px !important", width: "24px !important", }} />) : (drawerType === "signUp" ? "Create Account" : "LogIn")}

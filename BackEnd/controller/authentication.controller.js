@@ -4,7 +4,6 @@ const utils = require("../utils/utils");
 
 async function handleSignUp(req, res) {
   try {
-    console.log(req.body);
     let{email,password,name} = req.body.data;
     let alreadyExist = await User.findOne({ email });
     if (alreadyExist) {
@@ -29,6 +28,19 @@ async function handleSignUp(req, res) {
 
 async function handleSignIn(req, res) {
   let{email,password} = req.body.data;
+  let {authorization} = req.body.headers;
+
+  if(utils.IS_EMPTY(authorization)===false){
+    let isLoggedIn = await utils.IS_SIGNED_IN(authorization);
+
+    if(isLoggedIn===200){
+      return res.status(406).send({
+        statusCode:406,
+        message: "User Already Logged In",
+      });
+    }
+  }
+
   try {
     let user = await User.findOne({ email });
 
@@ -56,5 +68,10 @@ async function handleSignIn(req, res) {
     res.status(500).send({ statusCode:500, error: "Something went wrong" });
   }
 }
+
+// async function dummy(req,res){
+//   let response = await utils.IS_SIGNED_IN(req.headers.authorization)
+//   res.send(response);
+// }
 
 module.exports = { handleSignUp, handleSignIn };

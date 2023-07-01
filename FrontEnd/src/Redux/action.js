@@ -1,5 +1,5 @@
 import {constant} from "../utils/constants";
-import { HTTPPost } from "../utils/utils";
+import { HTTPPost, localStorage } from "../utils/utils";
 import { toast } from "react-toastify";
 import {
   URL_GENERATION_REQUEST,
@@ -12,7 +12,10 @@ import {
   TOGGLE_DRAWER,
   SIGNUP_REQUEST,
   SIGNUP_SUCCESS,
-  SIGNUP_FAILED
+  SIGNUP_FAILED,
+  SIGNIN_REQUEST,
+  SIGNIN_SUCCESS,
+  SIGNIN_FAILED,
 } from "./actionType";
 import axios from "axios";
 
@@ -87,6 +90,26 @@ function signup_failed(payload) {
   };
 }
 
+function signin_request() {
+  return {
+    type: SIGNIN_REQUEST,
+  };
+}
+
+function signin_success(payload) {
+  return {
+    type: SIGNIN_SUCCESS,
+    payload
+  };
+}
+
+function signin_failed(payload) {
+  return {
+    type: SIGNIN_FAILED,
+    payload
+  };
+}
+
 function handleURLGeneration(urlData) {
   return async (dispatch, getState) => {
     try {
@@ -123,22 +146,41 @@ function toggleDrawer(open,page){
 } 
 
 function handleSignUp(userData){
-  return async (dispatch, getState) => {
+  return async (dispatch) => {
     try {
       dispatch(signup_request());
       let fetchData = await HTTPPost(constant.SIGNUP,userData);
-      console.log(fetchData);
       if(fetchData.data.statusCode==200){
         dispatch(signup_success(fetchData.data));
       }
 
         toast.success(fetchData.data.message);
-
-        
-
     } catch (error) {
       console.log(error.response.data);
       await dispatch(signup_failed(error.response.data));
+      toast.error(error.response.data.message);
+    }
+  };
+}
+
+function handleSignIn(userData){
+  return async (dispatch) => {
+    try {
+      dispatch(signin_request());
+      console.log(userData);
+
+      let fetchData = await HTTPPost(constant.SIGNIN,userData);
+      console.log(fetchData);
+
+      if(fetchData.data.statusCode==200){
+        localStorage.setStorageKey(constant.LOGIN_TOKEN,fetchData.data.token);
+        dispatch(signin_success(fetchData.data));
+      }
+
+      toast.success(fetchData.data.message);
+    } catch (error) {
+      console.log(error);
+      await dispatch(signin_failed(error.response.data));
       toast.error(error.response.data.message);
     }
   };
@@ -160,4 +202,8 @@ export {
   signup_request,
   signup_success,
   signup_failed,
+  signin_request,
+  signin_success,
+  signin_failed,
+  handleSignIn
 };

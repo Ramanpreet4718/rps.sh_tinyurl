@@ -15,6 +15,7 @@ async function HTTPPost(endPoint, dataObj) {
         headers: {
             Accept: "application.json",
             "Content-Type": "application/json",
+            'authorization': `Bearer ${localStorage.getStorageKey(constant.LOGIN_TOKEN)}`
         },
         data: dataObj,
     };
@@ -23,4 +24,18 @@ async function HTTPPost(endPoint, dataObj) {
     return data;
 }
 
-export { isEmpty, HTTPPost };
+let localStorage = {
+    storage: window.localStorage,
+    setStorageKey: setStorageKey,
+    getStorageKey: getStorageKey
+}
+
+function setStorageKey(keyName, keyValue) {
+    return this.storage.setItem(keyName, keyValue);
+}
+
+function getStorageKey(keyName) {
+    return this.storage.getItem(keyName) || "";
+}
+
+export { isEmpty, HTTPPost, localStorage };

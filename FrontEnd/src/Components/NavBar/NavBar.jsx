@@ -1,10 +1,13 @@
 import { AppBar, Box, Toolbar, Typography } from "@mui/material";
 import Sidebar from "../Sidebar/Sidebar";
 import { toggleDrawer } from "../../Redux/action";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function NavBar() {
     let dispatch = useDispatch();
+    let isAuth = useSelector((store) => { return store.isAuth })
+
+    console.log(isAuth);
 
     return <>
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -36,32 +39,64 @@ export default function NavBar() {
                             My URLs
                         </Typography>
 
-                        <Typography
-                            sx={{
-                                fontFamily: "sans-serif",
-                                color: "white",
-                                mr: "1rem",
-                                cursor: "pointer"
-                            }}
-                            variant="subtitle"
-                            onClick={(e) => { dispatch(toggleDrawer(true, "signIn")) }}
-                        >
-                            Sign In
-                        </Typography>
+                        {isAuth ?
+                            <>
+                                <Typography
+                                    sx={{
+                                        fontFamily: "sans-serif",
+                                        color: "white",
+                                        mr: "1rem",
+                                        cursor: "pointer"
+                                    }}
+                                    variant="subtitle"
+                                // onClick={(e) => { dispatch(toggleDrawer(true, "signIn")) }}
+                                >
+                                    Username
+                                </Typography>
 
-                        <Typography
-                            sx={{
-                                fontFamily: "sans-serif",
-                                color: "white",
-                                mr: "1rem",
-                                cursor: "pointer"
-                            }}
-                            name="signUp"
-                            variant="subtitle"
-                            onClick={(e) => { dispatch(toggleDrawer(true, "signUp")) }}
-                        >
-                            Sign up
-                        </Typography>
+                                <Typography
+                                    sx={{
+                                        fontFamily: "sans-serif",
+                                        color: "white",
+                                        mr: "1rem",
+                                        cursor: "pointer"
+                                    }}
+                                    variant="subtitle"
+                                // onClick={(e) => { dispatch(toggleDrawer(true, "signUp")) }}
+                                >
+                                    Sign out
+                                </Typography>
+                            </> :
+                            <>
+                                <Typography
+                                    sx={{
+                                        fontFamily: "sans-serif",
+                                        color: "white",
+                                        mr: "1rem",
+                                        cursor: "pointer"
+                                    }}
+                                    variant="subtitle"
+                                    onClick={(e) => { dispatch(toggleDrawer(true, "signIn")) }}
+                                >
+                                    Sign In
+                                </Typography>
+
+                                <Typography
+                                    sx={{
+                                        fontFamily: "sans-serif",
+                                        color: "white",
+                                        mr: "1rem",
+                                        cursor: "pointer"
+                                    }}
+                                    name="signUp"
+                                    variant="subtitle"
+                                    onClick={(e) => { dispatch(toggleDrawer(true, "signUp")) }}
+                                >
+                                    Sign up
+                                </Typography>
+                            </>
+                        }
+
                         <Sidebar />
                     </Toolbar>
                 </AppBar>
