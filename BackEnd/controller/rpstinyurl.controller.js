@@ -4,9 +4,7 @@ const utils = require("../utils/utils");
 
 async function generateURL(req, res) {
   try {
-    // console.log(req.body);
-    // const { tinyUrl = "", redirectUrl, email = "" } = req.body.data;
-    const { tinyUrl = "", redirectUrl, email = "" } = req.body;
+    const { tinyUrl = "", redirectUrl, email = "" } = req.body.data;
     let auther = {};
 
     if (utils.IS_EMPTY(email) == false) {
