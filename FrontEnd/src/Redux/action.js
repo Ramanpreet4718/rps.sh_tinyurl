@@ -138,6 +138,8 @@ function handleURLGeneration(urlData) {
   return async (dispatch, getState) => {
     try {
       dispatch(url_generation_request());
+      urlData = { ...urlData, userId: store.getState().userId }
+      console.log(urlData);
       let fetchData = await HTTPPost(constant.NEW_REQUEST, urlData);
       console.log(fetchData);
       dispatch(url_generation_success(fetchData.data));

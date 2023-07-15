@@ -5,11 +5,13 @@ const ObjectId = require('mongodb').ObjectId
 
 async function generateURL(req, res) {
   try {
-    const { tinyUrl = "", redirectUrl, email = "" } = req.body.data;
+    const { tinyUrl = "", redirectUrl, userId = "" } = req.body.data;
     let auther = {};
 
-    if (utils.IS_EMPTY(email) == false) {
-      let object = await utils.GET_USER_BY_EMAIL(email);
+    console.log(userId);
+
+    if (utils.IS_EMPTY(userId) == false) {
+      let object = await utils.GET_USER_BY_ID(userId);
 
       console.log(object);
       if (object) {

@@ -18,6 +18,7 @@ export default function RequestCard() {
   let [urlError, setUrlError] = useState({ errorType: false, message: "", });
   let dispatch = useDispatch();
   let isLoading = useSelector((state) => state.isLoading);
+  let id = useSelector((state) => state.userId);
 
   const inputFunction = (e) => {
     setUrlObj({ ...urlObj, [e.target.name]: e.target.value });
