@@ -10,8 +10,15 @@ const UrlSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  auther: {
+    _id: mongoose.Types.ObjectId,
+    email: String,
+    name: String,
+  },
   visitHistory: [Date],
-});
+},
+  { timestamps: true }
+);
 
 const shortURL = mongoose.model("urldatabase", UrlSchema);
 

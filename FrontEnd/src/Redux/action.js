@@ -1,5 +1,5 @@
-import {constant} from "../utils/constants";
-import { HTTPPost, localStorage } from "../utils/utils";
+import { constant } from "../utils/constants";
+import { HTTPPost } from "../utils/utils";
 import { toast } from "react-toastify";
 import {
   URL_GENERATION_REQUEST,
@@ -16,8 +16,12 @@ import {
   SIGNIN_REQUEST,
   SIGNIN_SUCCESS,
   SIGNIN_FAILED,
+  SIGNOUT_SUCCESS,
+  URL_LIST_SUCCESS,
+  URL_LIST_FAILED
 } from "./actionType";
 import axios from "axios";
+import { store } from "./store";
 
 function url_generation_request() {
   return {
@@ -62,11 +66,11 @@ function new_request() {
   };
 }
 
-function toggle_drawer(open,page="") {
+function toggle_drawer(open, page = "") {
   return {
     type: TOGGLE_DRAWER,
-    open:open,
-    page:page,
+    open: open,
+    page: page,
   };
 }
 
@@ -110,11 +114,31 @@ function signin_failed(payload) {
   };
 }
 
+function signout_success() {
+  return {
+    type: SIGNOUT_SUCCESS,
+  };
+}
+
+function url_list_success(payload) {
+  return {
+    type: URL_LIST_SUCCESS,
+    payload
+  };
+}
+
+function url_list_failed(payload) {
+  return {
+    type: URL_LIST_FAILED,
+    payload
+  };
+}
+
 function handleURLGeneration(urlData) {
   return async (dispatch, getState) => {
     try {
       dispatch(url_generation_request());
-      let fetchData = await HTTPPost(constant.NEW_REQUEST,urlData);
+      let fetchData = await HTTPPost(constant.NEW_REQUEST, urlData);
       console.log(fetchData);
       dispatch(url_generation_success(fetchData.data));
     } catch (error) {
@@ -128,7 +152,7 @@ function handleTinyURLRedirect(urlData) {
   return async (dispatch, getState) => {
     try {
       dispatch(tinyurl_request());
-      const url = constant.BACKEND_URL_LOCAL+urlData;
+      const url = constant.BACKEND_URL_LOCAL + urlData;
 
       let fetchData = await axios.get(url);
 
@@ -139,22 +163,22 @@ function handleTinyURLRedirect(urlData) {
   };
 }
 
-function toggleDrawer(open,page){
+function toggleDrawer(open, page) {
   return (dispatch) => {
-      dispatch(toggle_drawer(open,page));
+    dispatch(toggle_drawer(open, page));
   };
-} 
+}
 
-function handleSignUp(userData){
+function handleSignUp(userData) {
   return async (dispatch) => {
     try {
       dispatch(signup_request());
-      let fetchData = await HTTPPost(constant.SIGNUP,userData);
-      if(fetchData.data.statusCode==200){
+      let fetchData = await HTTPPost(constant.SIGNUP, userData);
+      if (fetchData.data.statusCode == 200) {
         dispatch(signup_success(fetchData.data));
       }
 
-        toast.success(fetchData.data.message);
+      toast.success(fetchData.data.message);
     } catch (error) {
       console.log(error.response.data);
       await dispatch(signup_failed(error.response.data));
@@ -163,18 +187,17 @@ function handleSignUp(userData){
   };
 }
 
-function handleSignIn(userData){
+function handleSignIn(userData) {
   return async (dispatch) => {
     try {
       dispatch(signin_request());
       console.log(userData);
 
-      let fetchData = await HTTPPost(constant.SIGNIN,userData);
-      console.log(fetchData);
+      let fetchData = await HTTPPost(constant.SIGNIN, userData);
 
-      if(fetchData.data.statusCode==200){
-        localStorage.setStorageKey(constant.LOGIN_TOKEN,fetchData.data.token);
+      if (fetchData.data.statusCode == 200) {
         dispatch(signin_success(fetchData.data));
+        await getUrlList(fetchData.data.data.id);
       }
 
       toast.success(fetchData.data.message);
@@ -184,6 +207,21 @@ function handleSignIn(userData){
       toast.error(error.response.data.message);
     }
   };
+}
+
+async function getUrlList(userId) {
+  try {
+    console.log(userId);
+    let fetchData = await HTTPPost(constant.USER_LIST, { userId });
+    console.log(fetchData);
+
+    if (fetchData.data.statusCode == 200) {
+      store.dispatch(url_list_success(fetchData.data.list));
+    }
+  } catch (error) {
+    console.log(error);
+    store.dispatch(url_list_failed(error.response.data));
+  }
 }
 
 export {
@@ -205,5 +243,9 @@ export {
   signin_request,
   signin_success,
   signin_failed,
-  handleSignIn
+  handleSignIn,
+  signout_success,
+  url_list_success,
+  url_list_failed,
+  getUrlList
 };

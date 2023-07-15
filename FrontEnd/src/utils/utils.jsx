@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { constant } from "./constants";
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { store } from "../Redux/store";
 
 function isEmpty(data) {
     return data === undefined || data === ""
@@ -9,13 +11,14 @@ function isEmpty(data) {
 async function HTTPPost(endPoint, dataObj) {
     let url = constant.BACKEND_URL_LOCAL;
     url = url + endPoint
+    let storeData = store.getState()
 
     const obj = {
         method: "post",
         headers: {
             Accept: "application.json",
             "Content-Type": "application/json",
-            'authorization': `Bearer ${localStorage.getStorageKey(constant.LOGIN_TOKEN)}`
+            'authorization': `Bearer ${storeData.token}`
         },
         data: dataObj,
     };
@@ -24,18 +27,13 @@ async function HTTPPost(endPoint, dataObj) {
     return data;
 }
 
-let localStorage = {
-    storage: window.localStorage,
-    setStorageKey: setStorageKey,
-    getStorageKey: getStorageKey
+function dateFormatter(str) {
+    let date = new Date(str);
+    let day = date.getDate();
+    let month = date.getMonth();
+    let year = date.getFullYear();
+    let finalDate = `${day}/${month}/${year}`
+    return finalDate
 }
 
-function setStorageKey(keyName, keyValue) {
-    return this.storage.setItem(keyName, keyValue);
-}
-
-function getStorageKey(keyName) {
-    return this.storage.getItem(keyName) || "";
-}
-
-export { isEmpty, HTTPPost, localStorage };
+export { isEmpty, HTTPPost, dateFormatter };

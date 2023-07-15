@@ -10,9 +10,11 @@ import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { handleURLGeneration } from "../../Redux/action";
+import { isEmpty } from "../../utils/utils";
 
 export default function RequestCard() {
   let [urlObj, setUrlObj] = useState({ tinyUrl: "", redirectUrl: "" });
+  let [urlError, setUrlError] = useState({ errorType: false, message: "", });
   let dispatch = useDispatch();
 
   const inputFunction = (e) => {
@@ -20,6 +22,13 @@ export default function RequestCard() {
   };
 
   const submitFunciont = () => {
+    if (isEmpty(urlObj.redirectUrl)) {
+      setUrlError({ ...urlError, errorType: true, message: "Please enter valid URL", })
+      return
+    }
+
+    setUrlError({ ...urlError, errorType: false, message: "", })
+
     let response = dispatch(handleURLGeneration(urlObj));
   };
 
@@ -48,6 +57,8 @@ export default function RequestCard() {
           fullWidth
           name="redirectUrl"
           onChange={inputFunction}
+          error={urlError.errorType}
+          helperText={urlError.message}
         />
         <Typography
           sx={{
@@ -73,6 +84,7 @@ export default function RequestCard() {
           name="tinyUrl"
           onChange={inputFunction}
           inputProps={{ maxLength: 7 }}
+          error={urlError.errorType}
         />
         <Button
           color="success"

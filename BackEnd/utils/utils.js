@@ -3,23 +3,24 @@ const jwt = require("jsonwebtoken");
 const User = require("../db/user.model");
 
 let utils = {
-    IS_EMPTY:isEmpty,
-    GENERATE_AUTH_TOKEN:generateAuthToken,
-    VERIFY_TOKEN:verifyToken,
-    IS_SIGNED_IN:isSignedIn,
+    IS_EMPTY: isEmpty,
+    GENERATE_AUTH_TOKEN: generateAuthToken,
+    VERIFY_TOKEN: verifyToken,
+    IS_SIGNED_IN: isSignedIn,
     GET_USER_BY_ID: getUserbyID,
+    GET_USER_BY_EMAIL: getUserbyEmail,
 };
 
-function isEmpty(data){
-    return data === undefined || data === ""; 
+function isEmpty(data) {
+    return data === undefined || data === "";
 }
 
 function generateAuthToken(user) {
-        let payload = {
+    let payload = {
         id: user._id,
         email: user.email,
         name: user.name,
-        };
+    };
     return jwt.sign(payload, config.JWT_SECRET);
 }
 
@@ -29,12 +30,12 @@ function verifyToken(token) {
     return payload;
 }
 
-async function isSignedIn(data){
+async function isSignedIn(data) {
     try {
         let token = data.split(" ").pop();
         let details = this.VERIFY_TOKEN(token);
         let user = await this.GET_USER_BY_ID(details.id);
-        if(user){
+        if (user) {
             return 200;
         }
         return 406
@@ -43,9 +44,18 @@ async function isSignedIn(data){
     }
 }
 
-async function getUserbyID(id){
+async function getUserbyID(id) {
     try {
-        let user =  await User.findById(id);
+        let user = await User.findById(id);
+        return user;
+    } catch (error) {
+        return "";
+    }
+}
+
+async function getUserbyEmail(email) {
+    try {
+        let user = await User.findOne({ email });
         return user;
     } catch (error) {
         return "";

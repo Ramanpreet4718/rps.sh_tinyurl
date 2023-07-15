@@ -5,15 +5,17 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { useDispatch, useSelector } from 'react-redux';
 import { handleSignIn, handleSignUp, toggleDrawer } from '../../Redux/action';
-import { CircularProgress, IconButton, InputAdornment, TextField, Typography } from '@mui/material';
+import { Avatar, CircularProgress, IconButton, InputAdornment, Link, TextField, Typography } from '@mui/material';
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { isEmpty } from '../../utils/utils';
+import URLList from './URLList';
 
 export default function Sidebar() {
     const dispatch = useDispatch();
     let openDrawer = useSelector((store) => { return store.openDrawer });
     let drawerType = useSelector((store) => { return store.drawerType });
+    let isAuth = useSelector((store) => { return store.isAuth });
     const handleDispatch = () => { dispatch(toggleDrawer(false)) };
 
     const [showPassword, setShowPassword] = useState(false);
@@ -88,7 +90,7 @@ export default function Sidebar() {
                 dispatch(handleSignIn(userDetails));
             }
         }
-    }, [passwordError, emailError, userNameError])
+    }, [passwordError, emailError, userNameError, isAuth])
 
     const list = (
         <Box
@@ -239,7 +241,7 @@ export default function Sidebar() {
                     open={openDrawer}
                     onClose={handleDispatch}
                 >
-                    {list}
+                    {drawerType === "urlList" ? <URLList /> : list}
                 </Drawer>
             </>
         </div>
