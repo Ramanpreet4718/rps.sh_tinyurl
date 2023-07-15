@@ -30,7 +30,8 @@ const initialState = {
   openDrawer: false,
   drawerType: "",
   username: "",
-  userURLList: []
+  userURLList: [],
+  userId: ""
 };
 
 export default function reducer(state = initialState, action) {
@@ -63,7 +64,11 @@ export default function reducer(state = initialState, action) {
     case NEW_REQUEST:
       return {
         ...state,
-        ...initialState,
+        isSuccess: false,
+        isError: false,
+        isLoading: false,
+        tinyUrl: "",
+        redirectUrl: "",
       };
 
     case TOGGLE_DRAWER:
@@ -99,7 +104,8 @@ export default function reducer(state = initialState, action) {
         message: action.payload.message,
         drawerType: "",
         openDrawer: false,
-        username: action.payload.data.name
+        username: action.payload.data.name,
+        userId: action.payload.data.id
       };
 
     case SIGNIN_FAILED:
@@ -115,6 +121,7 @@ export default function reducer(state = initialState, action) {
         drawerType: "",
         openDrawer: false,
         username: "",
+        userId: "",
         userURLList: []
       };
 

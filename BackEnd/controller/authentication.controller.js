@@ -27,12 +27,12 @@ async function handleSignUp(req, res) {
 }
 
 async function handleSignIn(req, res) {
-  // console.log(req.body);
+
   let { email, password } = req.body.data;
   let { authorization } = req.body.headers;
 
   if (utils.IS_EMPTY(authorization) === false) {
-    console.log(authorization);
+
     let isLoggedIn = await utils.IS_SIGNED_IN(authorization);
 
     if (isLoggedIn === 200) {

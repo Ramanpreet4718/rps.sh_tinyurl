@@ -1,6 +1,7 @@
 const shortURL = require("../db/rpstinyurl.model");
 const { nanoid } = require("nanoid");
 const utils = require("../utils/utils");
+const ObjectId = require('mongodb').ObjectId
 
 async function generateURL(req, res) {
   try {
@@ -75,7 +76,8 @@ async function getUrl(req, res) {
 async function getUserHistory(req, res) {
   try {
     const { userId } = req.body.data;
-    let userHistory = await shortURL.find({ "auther._id": userId });
+    const objectId = new ObjectId(userId)
+    let userHistory = await shortURL.find({ "auther._id": objectId });
     res.send({ statusCode: 200, list: userHistory });
 
   } catch (error) {

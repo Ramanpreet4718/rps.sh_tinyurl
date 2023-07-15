@@ -2,6 +2,7 @@ import {
   Button,
   Card,
   CardContent,
+  CircularProgress,
   TextField,
   Typography,
 } from "@mui/material";
@@ -16,6 +17,7 @@ export default function RequestCard() {
   let [urlObj, setUrlObj] = useState({ tinyUrl: "", redirectUrl: "" });
   let [urlError, setUrlError] = useState({ errorType: false, message: "", });
   let dispatch = useDispatch();
+  let isLoading = useSelector((state) => state.isLoading);
 
   const inputFunction = (e) => {
     setUrlObj({ ...urlObj, [e.target.name]: e.target.value });
@@ -94,7 +96,7 @@ export default function RequestCard() {
           onClick={submitFunciont}
           sx={{ margin: "1rem 0", textTransform: "none" }}
         >
-          Make tinyURL!
+          {isLoading ? (<CircularProgress sx={{ color: "white", height: "24px !important", width: "24px !important", }} />) : "Make tinyURL!"}
         </Button>
       </CardContent>
     </Card>

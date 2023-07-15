@@ -1,5 +1,5 @@
 import { constant } from "../utils/constants";
-import { HTTPPost } from "../utils/utils";
+import { HTTPPost, isEmpty } from "../utils/utils";
 import { toast } from "react-toastify";
 import {
   URL_GENERATION_REQUEST,
@@ -141,6 +141,11 @@ function handleURLGeneration(urlData) {
       let fetchData = await HTTPPost(constant.NEW_REQUEST, urlData);
       console.log(fetchData);
       dispatch(url_generation_success(fetchData.data));
+      console.log(isEmpty(store.getState().userId));
+      if (isEmpty(store.getState().userId) === false) {
+        await getUrlList(store.getState().userId);
+      }
+
     } catch (error) {
       console.log(error);
       await dispatch(url_generation_failed());
@@ -152,7 +157,7 @@ function handleTinyURLRedirect(urlData) {
   return async (dispatch, getState) => {
     try {
       dispatch(tinyurl_request());
-      const url = constant.BACKEND_URL_ONLINE + urlData;
+      const url = constant.BACKEND_URL_LOCAL + urlData;
 
       let fetchData = await axios.get(url);
 
