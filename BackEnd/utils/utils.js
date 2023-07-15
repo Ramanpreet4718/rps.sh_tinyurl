@@ -21,6 +21,7 @@ function generateAuthToken(user) {
         email: user.email,
         name: user.name,
     };
+    console.log(config.JWT_SECRET);
     return jwt.sign(payload, config.JWT_SECRET);
 }
 

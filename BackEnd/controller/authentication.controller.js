@@ -32,7 +32,7 @@ async function handleSignIn(req, res) {
   let { authorization } = req.body.headers;
 
   if (utils.IS_EMPTY(authorization) === false) {
-    console.log("hello");
+    console.log(authorization);
     let isLoggedIn = await utils.IS_SIGNED_IN(authorization);
 
     if (isLoggedIn === 200) {
