@@ -152,7 +152,7 @@ function handleTinyURLRedirect(urlData) {
   return async (dispatch, getState) => {
     try {
       dispatch(tinyurl_request());
-      const url = constant.BACKEND_URL_LOCAL + urlData;
+      const url = constant.BACKEND_URL_ONLINE + urlData;
 
       let fetchData = await axios.get(url);
 

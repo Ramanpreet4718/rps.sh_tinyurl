@@ -9,7 +9,7 @@ function isEmpty(data) {
 }
 
 async function HTTPPost(endPoint, dataObj) {
-    let url = constant.BACKEND_URL_LOCAL;
+    let url = constant.BACKEND_URL_ONLINE;
     url = url + endPoint
     let storeData = store.getState()
 
